@@ -294,7 +294,78 @@ void liberarLista(NodoSE*& lista)
         delete aux;
     }
 }
+// OPERACION 7: generar HTML.
+void generarHTML(const char *nombreArchivo, Orden tabla[FILAS][COLUMNAS])
+{
+    FILE *archivo;
+    int fila, columna;
+    archivo = fopen(nombreArchivo, "w");
+    if (archivo == NULL)
+    {
+        printf("No se pudo crear el archivo.\n");
+        return;
+    }
+    fprintf(archivo, "<html>\n");
+    fprintf(archivo, "<head>\n");
+    fprintf(archivo, "  <title>Ataque</title>\n");
+    fprintf(archivo, "  <style>\n");
+    fprintf(archivo, "    body { background-color: #FFFFFF; color: black; font-family: monospace; padding: 20px; }\n");
+    fprintf(archivo, "    table { border-collapse: collapse; background-color: #FFFFFF; table-layout: fixed; width: %dpx; }\n", (COLUMNAS + 1) * 32);
+    fprintf(archivo, "    td, th { width: 30px; height: 30px; text-align: center; font-size: 11px; border: 1px solid black; box-sizing: border-box; overflow: hidden; }\n");
+    fprintf(archivo, "    th { background-color: #FFFFFF; color: black; font-weight: bold; }\n");
+    fprintf(archivo, "    .encabezado-eje { background-color: #FFFFFF; color: black; font-weight: bold; }\n");
+    fprintf(archivo, "    .c-despegue { background-color: #d97706; color: white; font-weight: bold; }\n");
+    fprintf(archivo, "    .c-aterrizaje { background-color: #059669; color: white; font-weight: bold; }\n");
+    fprintf(archivo, "    .c-granada1 { background-color: #dc2626; color: white; font-weight: bold; }\n");
+    fprintf(archivo, "    .c-granada2 { background-color: #b91c1c; color: white; font-weight: bold; }\n");
+    fprintf(archivo, "    .c-kamikaze { background-color: #7c3aed; color: white; font-weight: bold; }\n");
+    fprintf(archivo, "    .c-espera { background-color: #4b5563; color: white; }\n");
+    fprintf(archivo, "    .c-movimiento { background-color: #1e3a8a; color: white; }\n");
+    fprintf(archivo, "  </style>\n");
+    fprintf(archivo, "</head>\n");
+    fprintf(archivo, "<body>\n");
 
+    fprintf(archivo, "<table border=\"1\">\n");
+
+    fprintf(archivo, "<tr>\n");
+    fprintf(archivo, "  <th>X\\Y</th>\n");
+    for (columna = 0; columna < COLUMNAS; columna++)
+    {
+        fprintf(archivo, "  <th>%d</th>\n", columna);
+    }
+    fprintf(archivo, "</tr>\n");
+
+    for (fila = 0; fila < FILAS; fila++)
+    {
+        fprintf(archivo, "<tr>\n");
+        fprintf(archivo, "  <td class=\"encabezado-eje\">%d</td>\n", fila);
+
+        for (columna = 0; columna < COLUMNAS; columna++)
+        {
+            if (tabla[fila][columna].despegue)
+                fprintf(archivo, "  <td class=\"c-despegue\">D</td>\n");
+            else if (tabla[fila][columna].aterrizaje)
+                fprintf(archivo, "  <td class=\"c-aterrizaje\">A</td>\n");
+            else if (tabla[fila][columna].soltarGranada1)
+                fprintf(archivo, "  <td class=\"c-granada1\">G1</td>\n");
+            else if (tabla[fila][columna].soltarGranada2)
+                fprintf(archivo, "  <td class=\"c-granada2\">G2</td>\n");
+            else if (tabla[fila][columna].ataqueKamikaze)
+                fprintf(archivo, "  <td class=\"c-kamikaze\">K</td>\n");
+            else if (tabla[fila][columna].espera != 0)
+                fprintf(archivo, "  <td class=\"c-espera\">E</td>\n");
+            else if (tabla[fila][columna].siguientex >= 0 && tabla[fila][columna].siguientey >= 0)
+                fprintf(archivo, "  <td class=\"c-movimiento\">M</td>\n");
+            else
+                fprintf(archivo, "  <td>&nbsp;</td>\n");
+        }
+        fprintf(archivo, "</tr>\n");
+    }
+    fprintf(archivo, "</table>\n");
+    fprintf(archivo, "</body>\n");
+    fprintf(archivo, "</html>\n");
+    fclose(archivo);
+}
 
 int main()
 {
