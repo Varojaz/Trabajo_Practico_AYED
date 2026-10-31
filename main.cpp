@@ -71,7 +71,7 @@ void MostrarMenu()
     return;
 }
 
-void Operacion(char opcion, Orden Tabla[][COLUMANAS], NodoSE*& lista)
+void Operacion(char opcion, Orden Tabla[][COLUMNAS], NodoSE*& lista)
 {
     switch (opcion)
     {
