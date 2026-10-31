@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <cmath> //solo lo incluí para utilizar la funcion modulo
+#define FILAS 200
+#define COLUMNAS 200
 using namespace std;
 
 /*HIPOTESIS IMPORTANTES.
@@ -42,20 +44,20 @@ struct OrdenArchivo
     int siguientey= 0;
 };
 
-void inicializar(Orden tabla[][200]);
+void inicializar(Orden tabla[][COLUMNAS]);
 void MostrarMenu();
 void Operacion(char opcion, Orden Tabla[][200], NodoSE*& lista);
 void CargarAAenMemoria(Orden Tabla[][200], NodoSE*& lista);
-void MostrarAtaqueCargado(NodoSE* lista, Orden Tabla[][200]);
-bool CargarATabla (char FileName[], Orden Tabla[][200]);
+void MostrarAtaqueCargado(NodoSE* lista, Orden Tabla[][COLUMNAS]);
+bool CargarATabla (char FileName[], Orden Tabla[][COLUMNAS]);
 bool Validacion (char FileName[], NodoSE*& lista);
 void liberarLista(NodoSE*& lista);
 
-void inicializar(Orden tabla[][200])
+void inicializar(Orden tabla[][COLUMNAS])
 {
-    for(int i = 0; i < 200; i++)
+    for(int i = 0; i < FILAS; i++)
     {
-        for(int j = 0; j < 200; j++)
+        for(int j = 0; j < COLUMNAS; j++)
         {
             tabla[i][j] = Orden(); // Inicializa todos los campos por defecto
         }
@@ -69,7 +71,7 @@ void MostrarMenu()
     return;
 }
 
-void Operacion(char opcion, Orden Tabla[][200], NodoSE*& lista)
+void Operacion(char opcion, Orden Tabla[][COLUMANAS], NodoSE*& lista)
 {
     switch (opcion)
     {
@@ -85,7 +87,7 @@ void Operacion(char opcion, Orden Tabla[][200], NodoSE*& lista)
     return;
 }
 
-void CargarAAenMemoria(Orden Tabla[][200], NodoSE*& lista) //AA: archivo de ataque
+void CargarAAenMemoria(Orden Tabla[][COLUMNAS], NodoSE*& lista) //AA: archivo de ataque
 {
     FILE* f;
     char FileName[100];
@@ -107,7 +109,7 @@ void CargarAAenMemoria(Orden Tabla[][200], NodoSE*& lista) //AA: archivo de ataq
     return;
 }
 
-bool CargarATabla (char FileName[], Orden Tabla[][200])
+bool CargarATabla (char FileName[], Orden Tabla[][COLUMNAS])
 {
     FILE* f = fopen(FileName, "rb");
     OrdenArchivo buffer;
@@ -127,7 +129,7 @@ bool CargarATabla (char FileName[], Orden Tabla[][200])
     return true;
 }
 
-void MostrarAtaqueCargado(NodoSE* lista, Orden Tabla[][200]) //En la lista están cargadas en orden, HIPOTESIS FUNDAMENTAL que en el archivo ya vengan en orden.
+void MostrarAtaqueCargado(NodoSE* lista, Orden Tabla[][COLUMNAS]) //En la lista están cargadas en orden, HIPOTESIS FUNDAMENTAL que en el archivo ya vengan en orden.
 {
     int mostrado = 0;
     if(!lista)
@@ -179,7 +181,7 @@ bool Validacion (char FileName[], NodoSE*& lista)
     int despegue = 0, aterrizaje = 0, kamikaze = 0;
     while (fread(&buffer, sizeof(OrdenArchivo), 1, f) && valido == true)
         {
-            if (buffer.x < 0 || buffer.x >= 200 || buffer.y < 0 || buffer.y >= 200) //Valido si esta dentro de la tabla
+            if (buffer.x < 0 || buffer.x >= 200 || buffer.y < 0 || buffer.y >= COLUMNAS) //Valido si esta dentro de la tabla
             {
                 cout << "ERROR: Coordenadas (" << buffer.x << "," << buffer.y << ") fuera de rango." << endl;
                 fclose(f);
@@ -297,7 +299,7 @@ int main()
 {
 
     NodoSE* lista = NULL;
-    Orden Tabla [200][200]; //En cada casillero puede haber una orden, hacer inicialización
+    Orden Tabla [FILAS][COLUMNAS]; //En cada casillero puede haber una orden, hacer inicialización
     inicializar(Tabla);
 
     cout<< "=================================================="<<endl<<
