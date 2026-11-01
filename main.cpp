@@ -737,6 +737,48 @@ OrdenArchivo convertirAArchivo(Orden o, int x, int y)
     r.siguientey = o.siguientey;
     return r;
 }
+// =====================================================================
+// OPERACION 5: Corregir un registro en memoria - Valeria
+// =====================================================================
+void corregirRegistroEnMemoria(Orden tabla[][COLUMNAS])
+{
+    int x, y;
+    char confirma;
+    Orden nueva;
+
+    cout << endl << "Ingrese la posicion x e y del registro a corregir: ";
+    cin >> x >> y;
+
+    if (!coordenadaValida(x, y))
+    {
+        cout << "ERROR: coordenadas fuera de la tabla." << endl;
+        return;
+    }
+
+    if (estaVacia(tabla[x][y]))
+    {
+        cout << "La celda (" << x << " ; " << y << ") no tiene ninguna orden cargada." << endl;
+    }
+    else
+    {
+        cout << "Registro actual en (" << x << " ; " << y << "):" << endl;
+        mostrarOrden(tabla[x][y]);
+    }
+
+    cout << "Desea reemplazarlo? (S/N): ";
+    cin >> confirma;
+    if (confirma != 'S' && confirma != 's')
+    {
+        cout << "No se realizaron cambios." << endl;
+        return;
+    }
+
+    ingresarOrden(nueva);
+    tabla[x][y] = nueva;          // se reemplaza la celda completa
+
+    cout << "Registro corregido:" << endl;
+    mostrarOrden(tabla[x][y]);
+}
 
 int main()
 {
