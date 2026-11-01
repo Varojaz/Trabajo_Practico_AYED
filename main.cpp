@@ -658,6 +658,85 @@ void generarHTML(const char *nombreArchivo, Orden tabla[FILAS][COLUMNAS])
     fprintf(archivo, "</html>\n");
     fclose(archivo);
 }
+// =====================================================================
+// SUBPROGRAMAS AUXILIARES DE LAS OPERACIONES 5 Y 6 - Valeria
+// =====================================================================
+// Hipotesis: una celda esta vacia si todos sus campos tienen el valor por defecto.
+bool estaVacia(Orden o)
+{
+    return o.espera == 0 && !o.soltarGranada1 && !o.soltarGranada2 &&
+           !o.ataqueKamikaze && !o.aterrizaje && !o.despegue &&
+           o.siguientex == 0 && o.siguientey == 0;
+}
+
+bool coordenadaValida(int x, int y)
+{
+    return x >= 0 && x < FILAS && y >= 0 && y < COLUMNAS;
+}
+
+// Lee un bool como 0/1, repitiendo hasta que el valor sea valido.
+bool leerBool(const char texto[])
+{
+    int valor;
+    do
+    {
+        cout << texto << " (1 = si, 0 = no): ";
+        cin >> valor;
+    } while (valor != 0 && valor != 1);
+    return valor == 1;
+}
+
+void mostrarOrden(Orden o)
+{
+    cout << "  Espera ..........: " << o.espera << endl;
+    cout << "  Soltar granada 1 : " << o.soltarGranada1 << endl;
+    cout << "  Soltar granada 2 : " << o.soltarGranada2 << endl;
+    cout << "  Ataque kamikaze  : " << o.ataqueKamikaze << endl;
+    cout << "  Aterrizaje ......: " << o.aterrizaje << endl;
+    cout << "  Despegue ........: " << o.despegue << endl;
+    cout << "  Siguiente (x, y) : (" << o.siguientex << ", " << o.siguientey << ")" << endl;
+}
+
+// Carga los datos de una orden por teclado (pasaje por referencia).
+void ingresarOrden(Orden &o)
+{
+    int espera;
+    do
+    {
+        cout << "Espera (>= 0): ";
+        cin >> espera;               // se lee en int: un negativo en unsigned "se da vuelta"
+    } while (espera < 0);
+    o.espera = espera;
+
+    o.soltarGranada1 = leerBool("Soltar granada 1");
+    o.soltarGranada2 = leerBool("Soltar granada 2");
+    o.ataqueKamikaze = leerBool("Ataque kamikaze");
+    o.aterrizaje     = leerBool("Aterrizaje");
+    o.despegue       = leerBool("Despegue");
+
+    do
+    {
+        cout << "Siguiente x e y (0 a " << FILAS - 1 << "): ";
+        cin >> o.siguientex >> o.siguientey;
+    } while (!coordenadaValida(o.siguientex, o.siguientey));
+}
+
+// Arma el registro del archivo a partir de una celda de la tabla.
+OrdenArchivo convertirAArchivo(Orden o, int x, int y)
+{
+    OrdenArchivo r;
+    r.x = x;
+    r.y = y;
+    r.espera = o.espera;
+    r.soltarGranada1 = o.soltarGranada1;
+    r.soltarGranada2 = o.soltarGranada2;
+    r.ataqueKamikaze = o.ataqueKamikaze;
+    r.aterrizaje = o.aterrizaje;
+    r.despegue = o.despegue;
+    r.siguientex = o.siguientex;
+    r.siguientey = o.siguientey;
+    return r;
+}
 
 int main()
 {
