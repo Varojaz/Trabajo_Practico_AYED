@@ -11,6 +11,9 @@ using namespace std;
 /*HIPOTESIS IMPORTANTES.
 1. Logicamente el archivo debe venir ordenado, si no no se podria saber en que orden se ejecutan las instrucciones.
 2. Utilizamos un unico archivo donde se encuentra la totalidad de instrucciones a ejecutar, es decir, o se carga el archivo o se crea, no ambas.
+3. La cantidad de Ordenes no pueden exceder le dimension de la tabla. La primer orden comienza con un despegue y la ultima orden finaliza con Despegue o Ataque Kamikaze.
+4. Partimos de un archivo generado previamente por el preograma con todas las validacciones, de ahi en mas se corrige de a 1 registro por vez y se validad nuevamente.
+Si es correcto se reescribe el registro, caso contraroio se vuelve a la version anterior del registro y se cierra el archivo.
 */
 
 
@@ -57,7 +60,7 @@ void liberarLista(NodoSE*& lista);
 void CrearArchivoDeAtaqueNuevo();
 bool CorregirRegistroEnArchivo(const char FileName[], int xBuscado, int yBuscado);
 
-
+//OPERACION 1
 void inicializar(Orden tabla[][COLUMNAS])
 {
     for(int i = 0; i < FILAS; i++)
@@ -117,7 +120,7 @@ void Operacion(char opcion, Orden Tabla[][COLUMNAS], NodoSE*& lista)
     }
     return;
 }
-
+//OPERACION 1
 void CargarAAenMemoria(Orden Tabla[][COLUMNAS], NodoSE*& lista) //AA: archivo de ataque
 {
     FILE* f;
@@ -160,6 +163,7 @@ bool CargarATabla (char FileName[], Orden Tabla[][COLUMNAS])
     return true;
 }
 
+//OPERACION 2
 void MostrarAtaqueCargado(NodoSE* lista, Orden Tabla[][COLUMNAS]) //En la lista están cargadas en orden, HIPOTESIS FUNDAMENTAL que en el archivo ya vengan en orden.
 {
     int mostrado = 0;
@@ -212,7 +216,7 @@ bool Validacion (char FileName[], NodoSE*& lista)
     int despegue = 0, aterrizaje = 0, kamikaze = 0;
     while (fread(&buffer, sizeof(OrdenArchivo), 1, f) && valido == true)
         {
-            if (buffer.x < 0 || buffer.x >= 200 || buffer.y < 0 || buffer.y >= COLUMNAS) //Valido si esta dentro de la tabla
+            if (buffer.x < 0 || buffer.x >= FILAS || buffer.y < 0 || buffer.y >= COLUMNAS) //Valido si esta dentro de la tabla
             {
                 cout << "ERROR: Coordenadas (" << buffer.x << "," << buffer.y << ") fuera de rango." << endl;
                 fclose(f);
@@ -353,20 +357,20 @@ void CrearArchivoAtaque()
             cout << "Fila (1-200): ";
             cin >> buffer.x;
 
-            if (buffer.x < 1 || buffer.x > 200)
+            if (buffer.x < 1 || buffer.x > FILAS)
                 cout << "ERROR: La fila debe estar entre 1 y 200." << endl;
 
-        } while (buffer.x < 1 || buffer.x > 200);
+        } while (buffer.x < 1 || buffer.x > FILAS);
 
         do
         {
             cout << "Columna (1-200): ";
             cin >> buffer.y;
 
-            if (buffer.y < 1 || buffer.y > 200)
+            if (buffer.y < 1 || buffer.y > COLUMNAS)
                 cout << "ERROR: La columna debe estar entre 1 y 200." << endl;
 
-        } while (buffer.y < 1 || buffer.y > 200);
+        } while (buffer.y < 1 || buffer.y > COLUMNAS);
 
         // Conversión a índices de matriz (0-199)
         buffer.x--;
@@ -397,20 +401,20 @@ void CrearArchivoAtaque()
                 cout << "Siguiente fila (1-200): ";
                 cin >> buffer.siguientex;
 
-                if (buffer.siguientex < 1 || buffer.siguientex > 200)
+                if (buffer.siguientex < 1 || buffer.siguientex > FILAS)
                     cout << "ERROR: La siguiente fila debe estar entre 1 y 200." << endl;
 
-            } while (buffer.siguientex < 1 || buffer.siguientex > 200);
+            } while (buffer.siguientex < 1 || buffer.siguientex > FILAS);
 
             do
             {
                 cout << "Siguiente columna (1-200): ";
                 cin >> buffer.siguientey;
 
-                if (buffer.siguientey < 1 || buffer.siguientey > 200)
+                if (buffer.siguientey < 1 || buffer.siguientey > COLUMNAS)
                     cout << "ERROR: La siguiente columna debe estar entre 1 y 200." << endl;
 
-            } while (buffer.siguientey < 1 || buffer.siguientey > 200);
+            } while (buffer.siguientey < 1 || buffer.siguientey > COLUMNAS);
 
             // Conversión a índices de matriz (0-199)
             buffer.siguientex--;
