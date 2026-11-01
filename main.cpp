@@ -48,8 +48,8 @@ struct OrdenArchivo
 
 void inicializar(Orden tabla[][COLUMNAS]);
 void MostrarMenu();
-void Operacion(char opcion, Orden Tabla[][200], NodoSE*& lista);
-void CargarAAenMemoria(Orden Tabla[][200], NodoSE*& lista);
+void Operacion(char opcion, Orden Tabla[][COLUMNAS], NodoSE*& lista);
+void CargarAAenMemoria(Orden Tabla[][COLUMNAS], NodoSE*& lista);
 void MostrarAtaqueCargado(NodoSE* lista, Orden Tabla[][COLUMNAS]);
 bool CargarATabla (char FileName[], Orden Tabla[][COLUMNAS]);
 bool Validacion (char FileName[], NodoSE*& lista);
@@ -231,7 +231,7 @@ bool Validacion (char FileName[], NodoSE*& lista)
             }
             if(kamikaze + aterrizaje > 1)
             {
-                cout<< "ERROR: ataque y kamikaze son excluyentes,"<<endl;
+                cout<< "ERROR: aterrizaje y kamikaze son excluyentes,"<<endl;
                 fclose(f);
                 return false;
             }
