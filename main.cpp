@@ -78,6 +78,8 @@ void MostrarMenu()
     cout<< "2. Mostrar ataque cargado."<<endl;
     cout << "3. Crear archivo de ataque nuevo." << endl;
     cout << "4. Corregir un registro del archivo de ataque." << endl;
+    cout << "5. Corregir un registro en memoria." << endl;
+    cout << "6. Guardar memoria en un archivo nuevo." << endl;
     return;
 }
 
