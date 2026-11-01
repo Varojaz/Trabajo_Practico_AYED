@@ -137,9 +137,15 @@ void Operacion(char opcion, Orden Tabla[][COLUMNAS], NodoSE*& lista)
     case '6':
         guardarMemoriaEnArchivo(Tabla);
         break;
-    case '7':
-        generarHTML(const char *nombreArchivo, Orden tabla[FILAS][COLUMNAS]);
+        case '7':
+    {
+        char nombreHTML[100];
+        cout << "Ingrese ruta y nombre del archivo html: ";
+        cin >> nombreHTML;
+        generarHTML(nombreHTML, Tabla);
+        cout << "Archivo html generado." << endl;
         break;
+    }
     default:
         break;
     }
@@ -659,7 +665,9 @@ void generarHTML(const char *nombreArchivo, Orden tabla[FILAS][COLUMNAS])
 
         for (columna = 0; columna < COLUMNAS; columna++)
         {
-            if (tabla[fila][columna].despegue)
+                        if (estaVacia(tabla[fila][columna]))
+                fprintf(archivo, "  <td>&nbsp;</td>\n");
+            else if (tabla[fila][columna].despegue)
                 fprintf(archivo, "  <td class=\"c-despegue\">D</td>\n");
             else if (tabla[fila][columna].aterrizaje)
                 fprintf(archivo, "  <td class=\"c-aterrizaje\">A</td>\n");
@@ -671,10 +679,8 @@ void generarHTML(const char *nombreArchivo, Orden tabla[FILAS][COLUMNAS])
                 fprintf(archivo, "  <td class=\"c-kamikaze\">K</td>\n");
             else if (tabla[fila][columna].espera != 0)
                 fprintf(archivo, "  <td class=\"c-espera\">E</td>\n");
-            else if (tabla[fila][columna].siguientex >= 0 && tabla[fila][columna].siguientey >= 0)
-                fprintf(archivo, "  <td class=\"c-movimiento\">M</td>\n");
             else
-                fprintf(archivo, "  <td>&nbsp;</td>\n");
+                fprintf(archivo, "  <td class=\"c-movimiento\">M</td>\n");
         }
         fprintf(archivo, "</tr>\n");
     }
