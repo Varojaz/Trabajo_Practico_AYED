@@ -55,6 +55,9 @@ bool CargarATabla (char FileName[], Orden Tabla[][COLUMNAS]);
 bool Validacion (char FileName[], NodoSE*& lista);
 void liberarLista(NodoSE*& lista);
 void CrearArchivoDeAtaqueNuevo();
+bool CorregirRegistroEnArchivo(const char FileName[], int xBuscado, int yBuscado);
+
+
 void inicializar(Orden tabla[][COLUMNAS])
 {
     for(int i = 0; i < FILAS; i++)
@@ -71,6 +74,7 @@ void MostrarMenu()
     cout<< "1. Cargar archivo de ataque en memoria."<<endl;
     cout<< "2. Mostrar ataque cargado."<<endl;
     cout << "3. Crear archivo de ataque nuevo." << endl;
+    cout << "4. Corregir un registro del archivo de ataque." << endl;
     return;
 }
 
@@ -86,6 +90,27 @@ void Operacion(char opcion, Orden Tabla[][COLUMNAS], NodoSE*& lista)
         break;
     case '3':
         CrearArchivoDeAtaqueNuevo();
+        break;
+    case '4':
+        char FileName[100];
+        int x, y;
+
+        cout << "Ingrese ruta y nombre del archivo a corregir: " << endl;
+        cin >> FileName;
+
+        cout << "Ingrese coordenada X del registro a corregir (0-199): ";
+        cin >> x;
+        cout << "Ingrese coordenada Y del registro a corregir (0-199): ";
+        cin >> y;
+
+        if (!CorregirRegistroEnArchivo(FileName, x, y))
+        {
+            cout << "No se pudo corregir el registro." << endl;
+        }
+        else
+        {
+            cout << "Registro corregido correctamente en el archivo." << endl;
+        }
         break;
     default:
         break;
@@ -415,6 +440,147 @@ void CrearArchivoAtaque()
 
     liberarLista(listaAux);
 }
+
+//Operacion 4: Corregir un registro en archivo
+bool CorregirRegistroEnArchivo(const char FileName[], int xBuscado, int yBuscado)
+{
+    FILE* f = fopen(FileName, "rb+");
+    if (!f)
+    {
+        cout << "ERROR: No se pudo abrir el archivo." << endl;
+        return false;
+    }
+
+    OrdenArchivo registro;
+    OrdenArchivo registroOriginal;
+    bool encontrado = false;
+    long indice = 0;
+    size_t leidos;
+
+    leidos = fread(&registro, sizeof(OrdenArchivo), 1, f);
+    while (leidos == 1 && !encontrado)
+    {
+        if (registro.x == xBuscado && registro.y == yBuscado)
+        {
+            encontrado = true;
+        }
+        else
+        {
+            indice++;
+            leidos = fread(&registro, sizeof(OrdenArchivo), 1, f);
+        }
+    }
+
+    if (!encontrado)
+    {
+        cout << "No se encontro un registro con coordenadas ("
+             << xBuscado << "," << yBuscado << ") en el archivo." << endl;
+        fclose(f);
+        return false;
+    }
+
+    cout << "\nREGISTRO ENCONTRADO:\n";
+    cout << "Coordenadas (x,y): (" << registro.x << "," << registro.y << ")\n";
+    cout << "Espera: " << registro.espera << endl;
+    cout << "Despegue: " << registro.despegue << endl;
+    cout << "Aterrizaje: " << registro.aterrizaje << endl;
+    cout << "Soltar granada 1: " << registro.soltarGranada1 << endl;
+    cout << "Soltar granada 2: " << registro.soltarGranada2 << endl;
+    cout << "Ataque kamikaze: " << registro.ataqueKamikaze << endl;
+    cout << "Siguiente (x,y): (" << registro.siguientex << "," << registro.siguientey << ")\n";
+
+    registroOriginal = registro;
+
+    cout << "\n--- INGRESE LOS NUEVOS DATOS ---\n";
+
+    cout << "Espera: ";
+    cin >> registro.espera;
+
+    cout << "Despegue (1=SI 0=NO): ";
+    cin >> registro.despegue;
+
+    cout << "Aterrizaje (1=SI 0=NO): ";
+    cin >> registro.aterrizaje;
+
+    cout << "Soltar granada 1 (1=SI 0=NO): ";
+    cin >> registro.soltarGranada1;
+
+    cout << "Soltar granada 2 (1=SI 0=NO): ";
+    cin >> registro.soltarGranada2;
+
+    cout << "Ataque kamikaze (1=SI 0=NO): ";
+    cin >> registro.ataqueKamikaze;
+
+    if (!registro.aterrizaje && !registro.ataqueKamikaze)
+    {
+        cout << "Siguiente x (0-199): ";
+        cin >> registro.siguientex;
+        cout << "Siguiente y (0-199): ";
+        cin >> registro.siguientey;
+    }
+    else
+    {
+        registro.siguientex = 0;
+        registro.siguientey = 0;
+    }
+
+    long offset = indice * (long)sizeof(OrdenArchivo);
+    if (fseek(f, offset, SEEK_SET) != 0)
+    {
+        cout << "ERROR: no se pudo posicionar el puntero del archivo." << endl;
+        fclose(f);
+        return false;
+    }
+
+    if (fwrite(&registro, sizeof(OrdenArchivo), 1, f) != 1)
+    {
+        cout << "ERROR: no se pudo escribir el registro actualizado." << endl;
+        fclose(f);
+        return false;
+    }
+
+    fclose(f);
+
+    NodoSE* listaAux = NULL;
+    if (!Validacion((char*)FileName, listaAux))
+    {
+        cout << "La modificacion deja el archivo en un estado invalido.\n";
+        cout << "Se restaurara el registro original.\n";
+
+        f = fopen(FileName, "rb+");
+        if (!f)
+        {
+            cout << "ERROR: no se pudo reabrir el archivo para restaurar." << endl;
+            liberarLista(listaAux);
+            return false;
+        }
+
+        if (fseek(f, offset, SEEK_SET) != 0)
+        {
+            cout << "ERROR: no se pudo reposicionar para restaurar." << endl;
+            fclose(f);
+            liberarLista(listaAux);
+            return false;
+        }
+
+        if (fwrite(&registroOriginal, sizeof(OrdenArchivo), 1, f) != 1)
+        {
+            cout << "ERROR: no se pudo restaurar el registro original." << endl;
+            fclose(f);
+            liberarLista(listaAux);
+            return false;
+        }
+
+        fclose(f);
+        liberarLista(listaAux);
+        return false;
+    }
+
+    liberarLista(listaAux);
+    cout << "La modificacion es valida y el registro quedo actualizado.\n";
+    return true;
+}
+
 
 // OPERACION 7: generar HTML.
 void generarHTML(const char *nombreArchivo, Orden tabla[FILAS][COLUMNAS])
