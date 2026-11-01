@@ -115,6 +115,12 @@ void Operacion(char opcion, Orden Tabla[][COLUMNAS], NodoSE*& lista)
             cout << "Registro corregido correctamente en el archivo." << endl;
         }
         break;
+    case '5':
+        corregirRegistroEnMemoria(Tabla);
+        break;
+    case '6':
+        guardarMemoriaEnArchivo(Tabla);
+        break;
     default:
         break;
     }
