@@ -14,6 +14,10 @@ using namespace std;
 3. La cantidad de Ordenes no pueden exceder le dimension de la tabla. La primer orden comienza con un despegue y la ultima orden finaliza con Despegue o Ataque Kamikaze.
 4. Partimos de un archivo generado previamente por el preograma con todas las validacciones, de ahi en mas se corrige de a 1 registro por vez y se validad nuevamente.
 Si es correcto se reescribe el registro, caso contraroio se vuelve a la version anterior del registro y se cierra el archivo.
+5. Una celda esta vacia cuando todos sus campos tienen el valor por defecto.
+6. En la operacion 5 las coordenadas van de 0 a 199 y se reemplaza la celda completa en memoria.
+7. La operacion 6 guarda los registros en orden de ruta (del despegue al aterrizaje o kamikaze), para cumplir la hipotesis 1.
+8. Las rutas de archivo se ingresan sin espacios.
 */
 
 
@@ -59,6 +63,14 @@ bool Validacion (char FileName[], NodoSE*& lista);
 void liberarLista(NodoSE*& lista);
 void CrearArchivoDeAtaqueNuevo();
 bool CorregirRegistroEnArchivo(const char FileName[], int xBuscado, int yBuscado);
+bool estaVacia(Orden o);
+bool coordenadaValida(int x, int y);
+bool leerBool(const char texto[]);
+void mostrarOrden(Orden o);
+void ingresarOrden(Orden &o);
+OrdenArchivo convertirAArchivo(Orden o, int x, int y);
+void corregirRegistroEnMemoria(Orden tabla[][COLUMNAS]);
+void guardarMemoriaEnArchivo(Orden tabla[][COLUMNAS]);
 
 //OPERACION 1
 void inicializar(Orden tabla[][COLUMNAS])
@@ -896,10 +908,9 @@ void guardarMemoriaEnArchivo(Orden tabla[][COLUMNAS])
 
     fclose(f);
     cout << "Se guardaron " << cantidad << " registros en " << nombre << "." << endl;
-    if (fueraDeRuta > 0)
+        if (fueraDeRuta > 0)
     {
-        cout << "AVISO: " << fueraDeRuta << " registro(s) no forman parte de la ruta; "
-             << "el archivo no pasara la validacion de la Operacion 1." << endl;
+        cout << "AVISO: " << fueraDeRuta << " registro(s) no forman parte de la ruta." << endl;
     }
 }
 int main()
