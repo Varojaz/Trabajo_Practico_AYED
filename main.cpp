@@ -71,6 +71,7 @@ void ingresarOrden(Orden &o);
 OrdenArchivo convertirAArchivo(Orden o, int x, int y);
 void corregirRegistroEnMemoria(Orden tabla[][COLUMNAS]);
 void guardarMemoriaEnArchivo(Orden tabla[][COLUMNAS]);
+void generarHTML(const char *nombreArchivo, Orden tabla[FILAS][COLUMNAS]);
 
 //OPERACION 1
 void inicializar(Orden tabla[][COLUMNAS])
@@ -92,6 +93,7 @@ void MostrarMenu()
     cout << "4. Corregir un registro del archivo de ataque." << endl;
     cout << "5. Corregir un registro en memoria." << endl;
     cout << "6. Guardar memoria en un archivo nuevo." << endl;
+    cout << "7. Visualizar un archivo de ataque en html."<< endl;
     return;
 }
 
@@ -134,6 +136,9 @@ void Operacion(char opcion, Orden Tabla[][COLUMNAS], NodoSE*& lista)
         break;
     case '6':
         guardarMemoriaEnArchivo(Tabla);
+        break;
+    case '7':
+        generarHTML(const char *nombreArchivo, Orden tabla[FILAS][COLUMNAS]);
         break;
     default:
         break;
