@@ -350,7 +350,7 @@ void liberarLista(NodoSE*& lista)
 }
 
 //Operacion 3: Crear un archivo de ataque nuevo 
-void CrearArchivoAtaque()
+void CrearArchivoDeAtaqueNuevo() 
 {
     char FileName[100];
 
