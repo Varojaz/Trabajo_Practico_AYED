@@ -5,6 +5,7 @@
 #include <cmath> //solo lo incluí para utilizar la funcion modulo
 #define FILAS 200
 #define COLUMNAS 200
+
 using namespace std;
 
 /*HIPOTESIS IMPORTANTES.
@@ -53,7 +54,7 @@ void MostrarAtaqueCargado(NodoSE* lista, Orden Tabla[][COLUMNAS]);
 bool CargarATabla (char FileName[], Orden Tabla[][COLUMNAS]);
 bool Validacion (char FileName[], NodoSE*& lista);
 void liberarLista(NodoSE*& lista);
-
+void CrearArchivoDeAtaqueNuevo();
 void inicializar(Orden tabla[][COLUMNAS])
 {
     for(int i = 0; i < FILAS; i++)
@@ -69,6 +70,7 @@ void MostrarMenu()
 {
     cout<< "1. Cargar archivo de ataque en memoria."<<endl;
     cout<< "2. Mostrar ataque cargado."<<endl;
+    cout << "3. Crear archivo de ataque nuevo." << endl;
     return;
 }
 
@@ -81,6 +83,9 @@ void Operacion(char opcion, Orden Tabla[][COLUMNAS], NodoSE*& lista)
         break;
     case '2':
         MostrarAtaqueCargado(lista, Tabla);
+        break;
+    case '3':
+        CrearArchivoDeAtaqueNuevo();
         break;
     default:
         break;
@@ -294,6 +299,123 @@ void liberarLista(NodoSE*& lista)
         delete aux;
     }
 }
+
+//Operacion 3: Crear un archivo de ataque nuevo 
+void CrearArchivoAtaque()
+{
+    char FileName[100];
+
+    cout << "Ingrese ruta y nombre del archivo a crear: ";
+    cin >> FileName;
+
+    FILE* f = fopen(FileName, "wb");
+
+    if (!f)
+    {
+        cout << "Error al crear el archivo." << endl;
+        return;
+    }
+
+    OrdenArchivo buffer;
+    char continuar;
+
+    do
+    {
+        cout << "\n--- NUEVA INSTRUCCION ---" << endl;
+
+        do
+        {
+            cout << "Fila (1-200): ";
+            cin >> buffer.x;
+
+            if (buffer.x < 1 || buffer.x > 200)
+                cout << "ERROR: La fila debe estar entre 1 y 200." << endl;
+
+        } while (buffer.x < 1 || buffer.x > 200);
+
+        do
+        {
+            cout << "Columna (1-200): ";
+            cin >> buffer.y;
+
+            if (buffer.y < 1 || buffer.y > 200)
+                cout << "ERROR: La columna debe estar entre 1 y 200." << endl;
+
+        } while (buffer.y < 1 || buffer.y > 200);
+
+        // Conversión a índices de matriz (0-199)
+        buffer.x--;
+        buffer.y--;
+
+        cout << "Tiempo de espera: ";
+        cin >> buffer.espera;
+
+        cout << "Despegue (1=SI 0=NO): ";
+        cin >> buffer.despegue;
+
+        cout << "Aterrizaje (1=SI 0=NO): ";
+        cin >> buffer.aterrizaje;
+
+        cout << "Soltar granada 1 (1=SI 0=NO): ";
+        cin >> buffer.soltarGranada1;
+
+        cout << "Soltar granada 2 (1=SI 0=NO): ";
+        cin >> buffer.soltarGranada2;
+
+        cout << "Ataque Kamikaze (1=SI 0=NO): ";
+        cin >> buffer.ataqueKamikaze;
+
+        if (!buffer.aterrizaje && !buffer.ataqueKamikaze)
+        {
+            do
+            {
+                cout << "Siguiente fila (1-200): ";
+                cin >> buffer.siguientex;
+
+                if (buffer.siguientex < 1 || buffer.siguientex > 200)
+                    cout << "ERROR: La siguiente fila debe estar entre 1 y 200." << endl;
+
+            } while (buffer.siguientex < 1 || buffer.siguientex > 200);
+
+            do
+            {
+                cout << "Siguiente columna (1-200): ";
+                cin >> buffer.siguientey;
+
+                if (buffer.siguientey < 1 || buffer.siguientey > 200)
+                    cout << "ERROR: La siguiente columna debe estar entre 1 y 200." << endl;
+
+            } while (buffer.siguientey < 1 || buffer.siguientey > 200);
+
+            // Conversión a índices de matriz (0-199)
+            buffer.siguientex--;
+            buffer.siguientey--;
+        }
+        else
+        {
+            buffer.siguientex = 0;
+            buffer.siguientey = 0;
+        }
+
+        fwrite(&buffer, sizeof(OrdenArchivo), 1, f);
+
+        cout << "\nDesea ingresar otra instruccion? (S/N): ";
+        cin >> continuar;
+
+    } while (continuar == 'S' || continuar == 's');
+
+    fclose(f);
+
+    NodoSE* listaAux = NULL;
+
+    if (Validacion(FileName, listaAux))
+        cout << "\nArchivo creado y validado correctamente." << endl;
+    else
+        cout << "\nATENCION: El archivo fue creado pero contiene errores de validacion." << endl;
+
+    liberarLista(listaAux);
+}
+
 // OPERACION 7: generar HTML.
 void generarHTML(const char *nombreArchivo, Orden tabla[FILAS][COLUMNAS])
 {
