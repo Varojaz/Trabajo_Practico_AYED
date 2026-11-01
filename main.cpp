@@ -779,7 +779,121 @@ void corregirRegistroEnMemoria(Orden tabla[][COLUMNAS])
     cout << "Registro corregido:" << endl;
     mostrarOrden(tabla[x][y]);
 }
+// =====================================================================
+// OPERACION 6: Guardar memoria en un archivo nuevo - Valeria
+// Los registros se guardan EN ORDEN DE RUTA (despegue -> ... -> fin),
+// porque la Operacion 1 supone que el archivo viene ordenado.
+// =====================================================================
+void guardarMemoriaEnArchivo(Orden tabla[][COLUMNAS])
+{
+    static bool visitado[FILAS][COLUMNAS];
+    char nombre[100];
+    char confirma;
+    FILE* f;
+    OrdenArchivo r;
+    int fila, columna;
+    int x = 0, y = 0, sx, sy;
+    int cantidad = 0, fueraDeRuta = 0;
+    bool hayDespegue = false;
+    bool fin = false;
 
+    // 1. Buscar la celda de despegue
+    for (fila = 0; fila < FILAS; fila++)
+    {
+        for (columna = 0; columna < COLUMNAS; columna++)
+        {
+            visitado[fila][columna] = false;
+            if (tabla[fila][columna].despegue && !hayDespegue)
+            {
+                x = fila;
+                y = columna;
+                hayDespegue = true;
+            }
+        }
+    }
+
+    if (!hayDespegue)
+    {
+        cout << "ERROR: la tabla no tiene despegue; no hay ruta para guardar." << endl;
+        return;
+    }
+
+    // 2. Pedir el archivo (si ya existe, se confirma antes de pisarlo)
+    cout << endl << "Ingrese ruta y nombre del archivo nuevo: ";
+    cin >> nombre;
+
+    f = fopen(nombre, "rb");
+    if (f != NULL)
+    {
+        fclose(f);
+        cout << "El archivo ya existe. Desea sobrescribirlo? (S/N): ";
+        cin >> confirma;
+        if (confirma != 'S' && confirma != 's')
+        {
+            cout << "Operacion cancelada." << endl;
+            return;
+        }
+    }
+
+    f = fopen(nombre, "wb");
+    if (f == NULL)
+    {
+        cout << "ERROR: no se pudo crear el archivo." << endl;
+        return;
+    }
+
+    // 3. Recorrer la ruta desde el despegue siguiendo siguientex / siguientey
+    while (!fin)
+    {
+        r = convertirAArchivo(tabla[x][y], x, y);
+        fwrite(&r, sizeof(OrdenArchivo), 1, f);
+        cantidad++;
+        visitado[x][y] = true;
+
+        if (tabla[x][y].aterrizaje || tabla[x][y].ataqueKamikaze)
+        {
+            fin = true;                               // fin normal de la ruta
+        }
+        else
+        {
+            sx = tabla[x][y].siguientex;
+            sy = tabla[x][y].siguientey;
+            if (!coordenadaValida(sx, sy) || visitado[sx][sy] || estaVacia(tabla[sx][sy]))
+            {
+                cout << "AVISO: la ruta se corta en (" << x << " ; " << y << ")." << endl;
+                fin = true;                           // ruta incompleta: se evita un ciclo infinito
+            }
+            else
+            {
+                x = sx;
+                y = sy;
+            }
+        }
+    }
+
+    // 4. Celdas con orden que no forman parte de la ruta: se guardan al final para no perderlas
+    for (fila = 0; fila < FILAS; fila++)
+    {
+        for (columna = 0; columna < COLUMNAS; columna++)
+        {
+            if (!visitado[fila][columna] && !estaVacia(tabla[fila][columna]))
+            {
+                r = convertirAArchivo(tabla[fila][columna], fila, columna);
+                fwrite(&r, sizeof(OrdenArchivo), 1, f);
+                cantidad++;
+                fueraDeRuta++;
+            }
+        }
+    }
+
+    fclose(f);
+    cout << "Se guardaron " << cantidad << " registros en " << nombre << "." << endl;
+    if (fueraDeRuta > 0)
+    {
+        cout << "AVISO: " << fueraDeRuta << " registro(s) no forman parte de la ruta; "
+             << "el archivo no pasara la validacion de la Operacion 1." << endl;
+    }
+}
 int main()
 {
 
