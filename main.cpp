@@ -111,6 +111,7 @@ void Operacion(char opcion, Orden Tabla[][COLUMNAS], NodoSE*& lista)
         CrearArchivoDeAtaqueNuevo();
         break;
     case '4':
+    {
         char FileName[100];
         int x, y;
 
@@ -131,6 +132,7 @@ void Operacion(char opcion, Orden Tabla[][COLUMNAS], NodoSE*& lista)
             cout << "Registro corregido correctamente en el archivo." << endl;
         }
         break;
+    }
     case '5':
         corregirRegistroEnMemoria(Tabla);
         break;
