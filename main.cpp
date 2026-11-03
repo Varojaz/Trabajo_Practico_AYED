@@ -137,7 +137,7 @@ void ArchivoInvalido5()
     fclose(f);
     cout << "Se ha creado el archivo INVALIDO de prueba: KamikazeYaterrizaje" << endl;
 }
-
+*/
 
 void inicializar(Orden tabla[][COLUMNAS]);
 void MostrarMenu();
@@ -158,7 +158,6 @@ OrdenArchivo convertirAArchivo(Orden o, int x, int y);
 void corregirRegistroEnMemoria(Orden tabla[][COLUMNAS]);
 void guardarMemoriaEnArchivo(Orden tabla[][COLUMNAS]);
 void generarHTML(const char *nombreArchivo, Orden tabla[FILAS][COLUMNAS]);
-*/
 
 void inicializar(Orden tabla[][COLUMNAS])
 {
