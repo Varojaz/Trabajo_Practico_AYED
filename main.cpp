@@ -53,6 +53,92 @@ struct OrdenArchivo
     int siguientey= 0;
 };
 
+/*
+void ArchivoValido()
+{
+    FILE* f = fopen("AtaqueValidoPrueba", "wb");
+    if (!f) return;
+    OrdenArchivo r1 = {10, 10, 0, false, false, false, false, true, 10, 11};
+    OrdenArchivo r2 = {10, 11, 2, false, false, false, false, false, 11, 11};
+    OrdenArchivo r3 = {11, 11, 0, true,  false, false, false, false, 11, 12};
+    OrdenArchivo r4 = {11, 12, 0, false, true,  false, false, false, 12, 12};
+    OrdenArchivo r5 = {12, 12, 0, false, false, false, true,  false, 0, 0};
+    fwrite(&r1, sizeof(OrdenArchivo), 1, f);
+    fwrite(&r2, sizeof(OrdenArchivo), 1, f);
+    fwrite(&r3, sizeof(OrdenArchivo), 1, f);
+    fwrite(&r4, sizeof(OrdenArchivo), 1, f);
+    fwrite(&r5, sizeof(OrdenArchivo), 1, f);
+    fclose(f);
+    cout << "Se ha creado el archivo VALIDO de prueba: AtaqueValidoPrueba" << endl;
+}
+
+void ArchivoInvalido1() //hay mas de un despegue
+{
+    FILE* f = fopen("DosDespegues", "wb");
+    if (!f) return;
+    OrdenArchivo r1 = {10, 10, 0, false, false, false, false, true, 10, 11};
+    OrdenArchivo r2 = {10, 11, 2, false, false, false, false, true, 11, 11};
+    OrdenArchivo r3 = {11, 11, 0, true,  false, false, false, false, 11, 12};
+    fwrite(&r1, sizeof(OrdenArchivo), 1, f);
+    fwrite(&r2, sizeof(OrdenArchivo), 1, f);
+    fwrite(&r3, sizeof(OrdenArchivo), 1, f);
+    fclose(f);
+    cout << "Se ha creado el archivo INVALIDO de prueba: DosDespegues" << endl;
+}
+
+void ArchivoInvalido2() //celdas no aledanias
+{
+    FILE* f = fopen("CeldasNoVecinas", "wb");
+    if (!f) return;
+    OrdenArchivo r1 = {10, 10, 0, false, false, false, false, true, 15, 15};
+    OrdenArchivo r2 = {15, 15, 0, false, false, false, true,  false, 0, 0};
+    fwrite(&r1, sizeof(OrdenArchivo), 1, f);
+    fwrite(&r2, sizeof(OrdenArchivo), 1, f);
+    fclose(f);
+    cout << "Se ha creado el archivo INVALIDO de prueba: CeldasNoVecinas" << endl;
+}
+
+void ArchivoInvalido3()
+{
+    FILE* f = fopen("SinAterrizaje", "wb");
+    if (!f) return;
+    OrdenArchivo r1 = {10, 10, 0, false, false, false, false, true, 10, 11};
+    OrdenArchivo r2 = {10, 11, 2, false, false, false, false, false, 11, 11};
+    OrdenArchivo r3 = {11, 11, 0, true,  false, false, false, false, 11, 12};
+    fwrite(&r1, sizeof(OrdenArchivo), 1, f);
+    fwrite(&r2, sizeof(OrdenArchivo), 1, f);
+    fwrite(&r3, sizeof(OrdenArchivo), 1, f);
+    fclose(f);
+    cout << "Se ha creado el archivo INVALIDO de prueba: SinAterrizaje" << endl;
+}
+
+void ArchivoInvalido4()
+{
+    FILE* f = fopen("SinDespegue", "wb");
+    if (!f) return;
+    OrdenArchivo r1 = {10, 10, 0, false, false, false, false, false, 10, 11};
+    OrdenArchivo r2 = {10, 11, 2, false, false, false, false, false, 11, 11};
+    fwrite(&r1, sizeof(OrdenArchivo), 1, f);
+    fwrite(&r2, sizeof(OrdenArchivo), 1, f);
+    fclose(f);
+    cout << "Se ha creado el archivo INVALIDO de prueba: SinDespegue" << endl;
+}
+
+void ArchivoInvalido5()
+{
+    FILE* f = fopen("KamikazeYaterrizaje", "wb");
+    if (!f) return;
+    OrdenArchivo r1 = {10, 10, 0, false, false, false, false, true, 10, 11};
+    OrdenArchivo r2 = {10, 11, 2, false, false, true, true, false, 11, 11};
+    OrdenArchivo r3 = {11, 11, 0, true,  false, false, false, false, 11, 12};
+    fwrite(&r1, sizeof(OrdenArchivo), 1, f);
+    fwrite(&r2, sizeof(OrdenArchivo), 1, f);
+    fwrite(&r3, sizeof(OrdenArchivo), 1, f);
+    fclose(f);
+    cout << "Se ha creado el archivo INVALIDO de prueba: KamikazeYaterrizaje" << endl;
+}
+
+
 void inicializar(Orden tabla[][COLUMNAS]);
 void MostrarMenu();
 void Operacion(char opcion, Orden Tabla[][COLUMNAS], NodoSE*& lista);
@@ -72,8 +158,8 @@ OrdenArchivo convertirAArchivo(Orden o, int x, int y);
 void corregirRegistroEnMemoria(Orden tabla[][COLUMNAS]);
 void guardarMemoriaEnArchivo(Orden tabla[][COLUMNAS]);
 void generarHTML(const char *nombreArchivo, Orden tabla[FILAS][COLUMNAS]);
+*/
 
-//OPERACION 1
 void inicializar(Orden tabla[][COLUMNAS])
 {
     for(int i = 0; i < FILAS; i++)
@@ -87,6 +173,7 @@ void inicializar(Orden tabla[][COLUMNAS])
 
 void MostrarMenu()
 {
+    cout<<"INGRESE UNA OPCION: "<<endl<<endl;
     cout<< "1. Cargar archivo de ataque en memoria."<<endl;
     cout<< "2. Mostrar ataque cargado."<<endl;
     cout << "3. Crear archivo de ataque nuevo." << endl;
@@ -94,6 +181,7 @@ void MostrarMenu()
     cout << "5. Corregir un registro en memoria." << endl;
     cout << "6. Guardar memoria en un archivo nuevo." << endl;
     cout << "7. Visualizar un archivo de ataque en html."<< endl;
+    cout<< "0. Salir del programa"<<endl<<endl;
     return;
 }
 
@@ -125,11 +213,11 @@ void Operacion(char opcion, Orden Tabla[][COLUMNAS], NodoSE*& lista)
 
         if (!CorregirRegistroEnArchivo(FileName, x, y))
         {
-            cout << "No se pudo corregir el registro." << endl;
+            cout << "No se pudo corregir el registro." << endl<<endl;
         }
         else
         {
-            cout << "Registro corregido correctamente en el archivo." << endl;
+            cout << "Registro corregido correctamente en el archivo." << endl<<endl;
         }
         break;
     }
@@ -158,17 +246,17 @@ void CargarAAenMemoria(Orden Tabla[][COLUMNAS], NodoSE*& lista) //AA: archivo de
 {
     FILE* f;
     char FileName[100];
-    cout<<endl<<"Ingrese ruta y nombre del archivo: "<<endl;
+    cout<<endl<<"Ingrese ruta y nombre del archivo: ";
     cin>>FileName;
     f = fopen(FileName, "rb");
     if (f)
     {
-        cout<< "Archivo encontrado."<<endl<<endl;
+        cout<<endl<< "Archivo encontrado."<<endl<<endl;
         fclose(f);
         if(Validacion(FileName, lista))
         {
             CargarATabla(FileName, Tabla);
-            cout<< "ATAQUE CARGADO EXITOSAMENTE."<<endl;
+            cout<< "ATAQUE CARGADO EXITOSAMENTE."<<endl<<endl;
         }
     }
     else 
@@ -205,10 +293,10 @@ void MostrarAtaqueCargado(NodoSE* lista, Orden Tabla[][COLUMNAS]) //En la lista 
         cout<< "No hay ataques cargados."<<endl;
         return;
     }
-    cout<< "MOSTRANDO ATAQUE CARGADO: "<<endl;
+    cout<<endl<< "MOSTRANDO ATAQUE CARGADO: "<<endl;
     while(lista)
     {
-        cout<< "CASILLERO ("<<lista->x<<" ; "<<lista->y<<")"<<endl;
+        cout<<endl<< "CASILLERO ("<<lista->x<<" ; "<<lista->y<<")"<<endl;
         if(Tabla[lista->x][lista->y].despegue)
             cout<< "- Despegue."<<endl;
         if(Tabla[lista->x][lista->y].aterrizaje)
@@ -229,13 +317,12 @@ void MostrarAtaqueCargado(NodoSE* lista, Orden Tabla[][COLUMNAS]) //En la lista 
 
         if(!(mostrado%3) && lista)
         {
-            cout<< "Presione ENTER para ver mas."<<endl;
+            cout<<endl<< "Presione ENTER para ver mas.";
             cin.ignore();
             cin.get();
-            cout<<endl;
         }
     }
-    cout<< "FIN DEL ATAQUE"<<endl;
+    cout<< "FIN DEL ATAQUE"<<endl<<endl;
     return;
 }
 
@@ -251,7 +338,7 @@ bool Validacion (char FileName[], NodoSE*& lista)
         {
             if (buffer.x < 0 || buffer.x >= FILAS || buffer.y < 0 || buffer.y >= COLUMNAS) //Valido si esta dentro de la tabla
             {
-                cout << "ERROR: Coordenadas (" << buffer.x << "," << buffer.y << ") fuera de rango." << endl;
+                cout << "ERROR: Coordenadas (" << buffer.x << "," << buffer.y << ") fuera de rango." << endl<<endl;
                 fclose(f);
                 return false;
             }
@@ -260,13 +347,13 @@ bool Validacion (char FileName[], NodoSE*& lista)
                 despegue ++;
                 if(buffer.soltarGranada1 || buffer.soltarGranada2 || buffer.ataqueKamikaze || buffer.aterrizaje) //validando que en una misma orden no haya otra instruccion
                 {
-                    cout<< "ERROR: no se puede despegar y atacar en la misma instruccion."<<endl;
+                    cout<< "ERROR: no se puede despegar y atacar en la misma instruccion."<<endl<<endl;
                     fclose(f);
                     return false;
                 }
                 if(despegue >1)
                 {
-                    cout<< "ERROR: no puede existir mas de un despegue."<<endl;
+                    cout<< "ERROR: no puede existir mas de un despegue."<<endl<<endl;
                     fclose(f);
                     return false;
                 }
@@ -276,7 +363,7 @@ bool Validacion (char FileName[], NodoSE*& lista)
                 aterrizaje ++;
                 if(aterrizaje >1)
                 {
-                    cout<< "ERROR: no puede existir mas de un aterrizaje."<<endl;
+                    cout<< "ERROR: no puede existir mas de un aterrizaje."<<endl<<endl;
                     fclose(f);
                     return false;
                 }
@@ -286,14 +373,14 @@ bool Validacion (char FileName[], NodoSE*& lista)
                 kamikaze ++;
                 if(kamikaze >1)
                 {
-                    cout<< "ERROR: no puede existir mas de un kamikaze."<<endl;
+                    cout<< "ERROR: no puede existir mas de un kamikaze."<<endl<<endl;
                     fclose(f);
                     return false;
                 }
             }
             if(kamikaze + aterrizaje > 1)
             {
-                cout<< "ERROR: aterrizaje y kamikaze son excluyentes,"<<endl;
+                cout<< "ERROR: aterrizaje y kamikaze son excluyentes,"<<endl<<endl;
                 fclose(f);
                 return false;
             }
@@ -302,7 +389,7 @@ bool Validacion (char FileName[], NodoSE*& lista)
                 if (abs(buffer.x - buffer.siguientex) > 1 || abs(buffer.y - buffer.siguientey) > 1)
                 {
                     cout << "ERROR: Celdas no aledanias entre (" << buffer.x << "," << buffer.y 
-                        << ") y (" << buffer.siguientex << "," << buffer.siguientey << ")." << endl;
+                        << ") y (" << buffer.siguientex << "," << buffer.siguientey << ")." << endl<<endl;
                     fclose(f);
                     return false;
                 }
@@ -384,30 +471,25 @@ void CrearArchivoDeAtaqueNuevo()
     do
     {
         cout << "\n--- NUEVA INSTRUCCION ---" << endl;
-
         do
         {
-            cout << "Fila (1-200): ";
+            cout << "Fila (0-199): ";
             cin >> buffer.x;
 
-            if (buffer.x < 1 || buffer.x > FILAS)
-                cout << "ERROR: La fila debe estar entre 1 y 200." << endl;
+            if (buffer.x <0 || buffer.x >= FILAS)
+                cout << "ERROR: La fila debe estar entre 0 y 199." << endl;
 
-        } while (buffer.x < 1 || buffer.x > FILAS);
+        } while (buffer.x < 0 || buffer.x >= FILAS);
 
         do
         {
-            cout << "Columna (1-200): ";
+            cout << "Columna (0-199): ";
             cin >> buffer.y;
 
-            if (buffer.y < 1 || buffer.y > COLUMNAS)
-                cout << "ERROR: La columna debe estar entre 1 y 200." << endl;
+            if (buffer.y < 0 || buffer.y >= COLUMNAS)
+                cout << "ERROR: La columna debe estar entre 0 y 199." << endl;
 
-        } while (buffer.y < 1 || buffer.y > COLUMNAS);
-
-        // Conversión a índices de matriz (0-199)
-        buffer.x--;
-        buffer.y--;
+        } while (buffer.y < 0 || buffer.y >= COLUMNAS);
 
         cout << "Tiempo de espera: ";
         cin >> buffer.espera;
@@ -431,27 +513,24 @@ void CrearArchivoDeAtaqueNuevo()
         {
             do
             {
-                cout << "Siguiente fila (1-200): ";
+                cout << "Siguiente fila (0-199): ";
                 cin >> buffer.siguientex;
 
-                if (buffer.siguientex < 1 || buffer.siguientex > FILAS)
-                    cout << "ERROR: La siguiente fila debe estar entre 1 y 200." << endl;
+                if (buffer.siguientex < 0 || buffer.siguientex >= FILAS)
+                    cout << "ERROR: La siguiente fila debe estar entre 0 y 199." << endl;
 
-            } while (buffer.siguientex < 1 || buffer.siguientex > FILAS);
+            } while (buffer.siguientex < 0 || buffer.siguientex >= FILAS);
 
             do
             {
-                cout << "Siguiente columna (1-200): ";
+                cout << "Siguiente columna (0-199): ";
                 cin >> buffer.siguientey;
 
-                if (buffer.siguientey < 1 || buffer.siguientey > COLUMNAS)
-                    cout << "ERROR: La siguiente columna debe estar entre 1 y 200." << endl;
+                if (buffer.siguientey < 0 || buffer.siguientey >= COLUMNAS)
+                    cout << "ERROR: La siguiente columna debe estar entre 0 y 199." << endl;
 
-            } while (buffer.siguientey < 1 || buffer.siguientey > COLUMNAS);
+            } while (buffer.siguientey < 0 || buffer.siguientey >= COLUMNAS);
 
-            // Conversión a índices de matriz (0-199)
-            buffer.siguientex--;
-            buffer.siguientey--;
         }
         else
         {
@@ -802,14 +881,14 @@ void corregirRegistroEnMemoria(Orden tabla[][COLUMNAS])
     cin >> confirma;
     if (confirma != 'S' && confirma != 's')
     {
-        cout << "No se realizaron cambios." << endl;
+        cout << "No se realizaron cambios." << endl<<endl;
         return;
     }
 
     ingresarOrden(nueva);
     tabla[x][y] = nueva;          // se reemplaza la celda completa
 
-    cout << "Registro corregido:" << endl;
+    cout << "Registro corregido:" << endl<<endl;
     mostrarOrden(tabla[x][y]);
 }
 // =====================================================================
@@ -928,21 +1007,28 @@ void guardarMemoriaEnArchivo(Orden tabla[][COLUMNAS])
 }
 int main()
 {
-
+    /*
+    ArchivoValido();
+    ArchivoInvalido1();
+    ArchivoInvalido2();
+    ArchivoInvalido3();
+    ArchivoInvalido4();
+    ArchivoInvalido5();
+    */
+        
     NodoSE* lista = NULL;
     Orden Tabla [FILAS][COLUMNAS]; //En cada casillero puede haber una orden, hacer inicialización
     inicializar(Tabla);
 
     cout<< "=================================================="<<endl<<
     "DRONE: Offline System."<<endl<<"=================================================="<<endl;
-    cout<<endl<<"INGRESE UNA OPCION: "<<endl<<endl;
     char opcion;
-    MostrarMenu();
     do
     {
+        MostrarMenu();
         cin>> opcion;
         Operacion(opcion, Tabla, lista);
-    } while (opcion != 's');
+    } while (opcion != '0');
 
     liberarLista(lista);
     
